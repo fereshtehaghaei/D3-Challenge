@@ -122,7 +122,8 @@ function makeResponsive() {
         .attr("y", d => yLinearScale(d.healthcare))
         .classed("stateText", true)
         .text(d => d.abbr)
-        .attr("font-size", 11);
+        .attr("font-size", 11)
+        .style("font-weight", "bold");
         // .transition()
         // .duration(1500)
         // //.delay(1000)
