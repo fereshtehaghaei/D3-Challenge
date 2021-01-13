@@ -1,32 +1,49 @@
-// Define SVG area dimensions
-var svgWidth = 850;
-var svgHeight = 550;
+//========================
+//Browser Resize function 
+//========================
+function makeResponsive() {
 
-// Define the chart's margins as an object
-var chartMargin = {
-    top: 20,
-    right: 40,
-    bottom: 60,
-    left: 100
-  };
+  // If the SVG area isn't empty when the browser loads,
+  // remove it and replace it with a resized version of the chart
+  var svgArea = d3.select("body").select("svg");
 
-  // Define dimensions of the chart area
-var chartWidth = svgWidth - chartMargin.left - chartMargin.right;
-var chartHeight = svgHeight - chartMargin.top - chartMargin.bottom;
+    if (!svgArea.empty()) {
+      svgArea.remove();
+    }
 
-// Select body, append SVG area to it, and set the dimensions
-var svg = d3.select("#scatter")
-    .append("svg")
-    .attr("height", svgHeight)
-    .attr("width", svgWidth);
+    
+  // svg params
+  var svgHeight = window.innerHeight/1.5;
+  var svgWidth = window.innerWidth/1.2;
 
-// Append a group to the SVG area and shift ('translate') it to the right and to the bottom
-var chartGroup = svg
-    .append("g")
-    .attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
+  // Define the chart's margins as an object
+  var chartMargin = {
+      top: 50,
+      right: 50,
+      bottom: 50,
+      left: 50
+    };
 
-  // Load data from data.csv
-d3.csv("assets/data/data.csv").then(function(Data) {
+    // Define dimensions of the chart area
+  var chartWidth = svgWidth - chartMargin.left - chartMargin.right;
+  var chartHeight = svgHeight - chartMargin.top - chartMargin.bottom;
+
+
+
+
+  // Select body, append SVG area to it, and set the dimensions
+  var svg = d3.select("#scatter")
+      .append("svg")
+      .attr("height", svgHeight)
+      .attr("width", svgWidth);
+
+  // Append a group to the SVG area and shift ('translate') it to the right and to the bottom
+  var chartGroup = svg
+      .append("g")
+      .attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
+
+    // Load data from data.csv
+  d3.csv("assets/data/data.csv").then(function(Data) {
 
 
     // Step 1: Parse Data/Cast as numbers
@@ -36,7 +53,7 @@ d3.csv("assets/data/data.csv").then(function(Data) {
       d.healthcare  = +d.healthcare;
     });
 
-
+    // =====?????????????????????????????
     // Step 2: Create Scale functions
     // ============================== 
     // Ylinear-Scale for the vertical axis.
@@ -75,14 +92,14 @@ d3.csv("assets/data/data.csv").then(function(Data) {
           .append("circle")
           .attr("cx", d => xLinearScale(d.poverty))
           .attr("cy", d => yLinearScale(d.healthcare))
-          .attr("r", "12")
+          .attr("r", "14")
           //.attr("fill", "red")
           .attr("opacity", ".8")
-          .classed("stateCircle", true)
+          .classed("stateCircle", true);
           // .transition()
           // .duration(1500)
           // //.delay(1000)
-          //.attr("r", 15);
+          // .attr("r", 14);
 
       // Step 6: Add State Abbreviations Text to Circles
       // ==============================
@@ -94,14 +111,18 @@ d3.csv("assets/data/data.csv").then(function(Data) {
         .attr("y", d => yLinearScale(d.healthcare))
         .classed("stateText", true)
         .text(d => d.abbr)
-        .attr("font-size", 10);
+        .attr("font-size", 11);
+        // .transition()
+        // .duration(1500)
+        // //.delay(1000)
+        // .attr("font-size", 12);
 
 
-      // Step 7: Initialize tool tip
+      // Step 7: Initialize tool-tip
       // ==============================
       var toolTip = d3.tip()
           .attr("class", "d3-tip")
-          .offset([80, -60])
+          .offset([90, -40])
           .html(function(d) {
             return (`${d.state}<br>Poverty: ${d.poverty}<br>Lacks Healthcare: ${d.healthcare}`);
           });
@@ -111,17 +132,23 @@ d3.csv("assets/data/data.csv").then(function(Data) {
       // ==============================
       chartGroup.call(toolTip);
 
-      // Step 9: Create event listeners to display and hide the tooltip
+      // Step 9: Create Event Listeners to display and hide the tooltip
       // ==============================
       circlesGroup.on("mouseover", function(data) {
         toolTip.show(data, this)
-        //.attr("fill", "green");
+        //.attr("mouseover", "green");
       })
-
-        // onmouseout event
+      
+        //==============?????????????????======
+        // Event Listener for on-mouseout event
         .on("mouseout", function(data, index) {
-          toolTip.hide(data);
+          toolTip.hide(data)
+              d3.select(data, this)
+                .attr("pointer-events", true) 
+                .att("fill", "green");
         });
+
+        
 
       // Create Y-axes labels
       chartGroup
@@ -136,10 +163,9 @@ d3.csv("assets/data/data.csv").then(function(Data) {
 
       chartGroup
         .append("text")
-        .attr("x", chartWidth /2)
-        //.attr("y",chartHeight +45)
+        .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`)
         .attr("class", "axisText")
-        .attr("dy", "32em")
+        .attr("dy", "1em")
         .text("In Poverty (%)");
 
 
@@ -147,3 +173,15 @@ d3.csv("assets/data/data.csv").then(function(Data) {
       }).catch(function(error) {
       console.log(error);
       });
+
+    }
+
+    makeResponsive();
+    
+    // Event listener for window resize.
+    // When the browser window is resized, makeResponsive() is called
+
+    d3.select(window).on("resize", makeResponsive);
+
+    //================?????????? Chart is NOT Responsive
+
