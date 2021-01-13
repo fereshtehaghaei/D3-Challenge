@@ -3,19 +3,19 @@
 //========================
 function makeResponsive() {
 
-  // If the SVG area isn't empty when the browser loads,
-  // remove it and replace it with a resized version of the chart
+  // If the SVG area isn't empty when the browser loads, remove & replace it with a resized version of the chart
   var svgArea = d3.select("body").select("svg");
 
+  // Setup Chart Params
   var width = parseInt(d3.select("#scatter").style("width"))
   var height = (width - width /4)
 
+    // Clear SVG if Not Empty
     if (!svgArea.empty()) {
       svgArea.remove();
     }
-
     
-  // svg params
+  // Setup Chart/SVG Params
   var svgHeight = height;
   var svgWidth = width;
 
@@ -32,13 +32,13 @@ function makeResponsive() {
   var chartHeight = svgHeight - chartMargin.top - chartMargin.bottom;
 
 
-  // Select body, append SVG area to it, and set the dimensions
+  // Create an SVG Element/Wrapper- Select body, append SVG area & set the dimensions
   var svg = d3.select("#scatter")
       .append("svg")
       .attr("height", svgHeight)
       .attr("width", svgWidth);
 
-  // Append a group to the SVG area and shift ('translate') it to the right and to the bottom
+  // Append Group Element & Set Margins - Shift (Translate) by Left and Top Margins Using Transform
   var chartGroup = svg
       .append("g")
       .attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
