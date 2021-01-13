@@ -7,14 +7,17 @@ function makeResponsive() {
   // remove it and replace it with a resized version of the chart
   var svgArea = d3.select("body").select("svg");
 
+  var width = parseInt(d3.select("#scatter").style("width"))
+  var height = (width - width /4)
+
     if (!svgArea.empty()) {
       svgArea.remove();
     }
 
     
   // svg params
-  var svgHeight = window.innerHeight/1.5;
-  var svgWidth = window.innerWidth/1.2;
+  var svgHeight = height;
+  var svgWidth = width;
 
   // Define the chart's margins as an object
   var chartMargin = {
@@ -27,8 +30,6 @@ function makeResponsive() {
     // Define dimensions of the chart area
   var chartWidth = svgWidth - chartMargin.left - chartMargin.right;
   var chartHeight = svgHeight - chartMargin.top - chartMargin.bottom;
-
-
 
 
   // Select body, append SVG area to it, and set the dimensions
@@ -50,20 +51,30 @@ function makeResponsive() {
     // ===================================
     Data.forEach(function(d) {
       d.poverty = +d.poverty
-      d.healthcare  = +d.healthcare;
+      d.healthcare  = +d.healthcare
+      d.age = +d.age
+      d.smokes = +d.smokes
+      d.income = +d.income
+      d.obesity = +d.obesity;
     });
 
-    // =====?????????????????????????????
+    
     // Step 2: Create Scale functions
     // ============================== 
     // Ylinear-Scale for the vertical axis.
     var yLinearScale = d3.scaleLinear()
-        .domain([2, d3.max(Data, d => d.healthcare)])
+        .domain([
+                d3.min(Data, d => d.healthcare)*.9,
+                d3.max(Data, d => d.healthcare)*1.1
+              ])
         .range([chartHeight, 0]);
 
     // Xlinear-Scale for the Horizontal axis.
     var xLinearScale = d3.scaleLinear()
-        .domain([8, d3.max(Data, d => d.poverty)])
+        .domain([
+                d3.min(Data, d => d.poverty)*.9,
+                d3.max(Data, d => d.poverty)*1.1
+              ])
         .range([0, chartWidth]);
 
 
@@ -92,7 +103,7 @@ function makeResponsive() {
           .append("circle")
           .attr("cx", d => xLinearScale(d.poverty))
           .attr("cy", d => yLinearScale(d.healthcare))
-          .attr("r", "14")
+          .attr("r", "12")
           //.attr("fill", "red")
           .attr("opacity", ".8")
           .classed("stateCircle", true);
@@ -164,6 +175,8 @@ function makeResponsive() {
       chartGroup
         .append("text")
         .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`)
+        // .attr('x', chartWidth /2)
+        // .attr('y', chartHeight +20)
         .attr("class", "axisText")
         .attr("dy", "1em")
         .text("In Poverty (%)");
@@ -183,5 +196,4 @@ function makeResponsive() {
 
     d3.select(window).on("resize", makeResponsive);
 
-    //================?????????? Chart is NOT Responsive
 
