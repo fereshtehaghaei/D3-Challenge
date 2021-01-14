@@ -43,15 +43,31 @@ function makeResponsive() {
         .append("g")
         .attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
 
+    
+     // ======================================
+     // Import & Load data from data.csv File
+    // =======================================
+    d3.csv("assets/data/data.csv").then(function(Data) {
+
+        // Parse Data/Cast as numbers
+        Data.forEach(function(d) {
+          d.poverty = +d.poverty
+          d.healthcare  = +d.healthcare
+          d.age = +d.age
+          d.smokes = +d.smokes
+          d.income = +d.income
+          d.obesity = +d.obesity;
+        });
+
       //==================================================================
       // Starting Bonus Section, setting up variables & Creating Functions
      //==================================================================
       
-     // ============================== 
-     // Step 1: Initial X & Y Axis
-     // ============================== 
-     var selectedXAxis = "poverty";
-     var selectedYAxis = "healthcare";
+// ============================== 
+// Step 1: Initial X & Y Axis
+// ============================== 
+var selectedXAxis = "poverty";
+var selectedYAxis = "healthcare";
 
 
 // ============================== 
@@ -164,11 +180,11 @@ function makeText(){
     return textGroup;
         }
 
-// ==============================
+// ========================================
 // Step 7: Function for updating tool-tip
-// ==============================
+// ========================================
 function updateToolTip(){  
-    
+    // xLable Options
     if(selectedXAxis == "poverty") {
         var xLable = "Poverty (%)"
     }
@@ -176,70 +192,52 @@ function updateToolTip(){
     else if (selectedXAxis == "age"){
         var xLable = "Age (Median)"
     }
-    
+
+    else if (selectedXAxis == "income"){
+        var xLable = "Household Income (Median)"
+    }
+
+    // yLable Options
+    if(selectedXAxis == "healthcare") {
+        var yLable = "Lacks Healthcare (%)"
+    }
+
+    else if (selectedXAxis == "smokes"){
+        var yLable = "Smokes (%)"
+    }
+
+    else if (selectedXAxis == "obesity"){
+        var yLable = "Obese (%)"
+    }
+
+    // Initialize ToolTip
     var toolTip = d3.tip()
             .attr("class", "d3-tip")
             .offset([90, -40])
             .html(function(d) {
-              return (`${d.state}<br>Poverty: ${d.poverty}<br>Lacks Healthcare: ${d.healthcare}`);
+              return (`<strong>${d.state}</strong>${d[selectedXAxis]}<br>${d[selectedYAxis]}`);
             });
         
-        //Create tooltip in the chart
-        chartGroup.call(toolTip);
-        
+    // Create tooltip in the chart
+    chartGroup.call(toolTip);
+
+    // Create Event Listeners to display and hide the ToolTip
+        // ==============================
+        circlesGroup.on("mouseover", function(data) {
+            toolTip.show(data, this)
+         })
+
+            // Event Listener for on-mouseout event
+            .on("mouseout", function(data, index) {
+              toolTip.hide(data, this)
+            });
+
+    return toolTip;       
+
         }
 
 
-
-
-
-
-     // Load data from data.csv
-    d3.csv("assets/data/data.csv").then(function(Data) {
-  
-  
-      // Step 1: Parse Data/Cast as numbers
-      // ===================================
-      Data.forEach(function(d) {
-        d.poverty = +d.poverty
-        d.healthcare  = +d.healthcare
-        d.age = +d.age
-        d.smokes = +d.smokes
-        d.income = +d.income
-        d.obesity = +d.obesity;
-      });
-  
- 
-  
-
-  
-  
-      
-  
-   
-  
         
-  
-  
-       
-  
-        // Step 9: Create Event Listeners to display and hide the tooltip
-        // ==============================
-        circlesGroup.on("mouseover", function(data) {
-          toolTip.show(data, this)
-          //.attr("mouseover", "green");
-        })
-        
-          //==============?????????????????======
-          // Event Listener for on-mouseout event
-          .on("mouseout", function(data, index) {
-            toolTip.hide(data)
-                d3.select(data, this)
-                  .attr("pointer-events", true) 
-                  .att("fill", "green");
-          });
-  
-          
   
         // Create Y-axes labels
         chartGroup
