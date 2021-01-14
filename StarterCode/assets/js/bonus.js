@@ -106,7 +106,6 @@ function updateYScale(Data, selectedYAxis){
 // ============================================
 
 // ???
-
 // Updating xAxis Upon Click on Axis Label
 function makeXaxis(newXScale,xAxis){
     var bottomAxis = d3.axisBottom(newXScale);
@@ -145,9 +144,9 @@ function makeCircles(){
             .append("circle")
             .attr("cx", d => newXScale(d[selectedXAxis]))
             .attr("cy", d => newYScale(d[selectedYAxis]))
-            .attr("r", "12")
+            .attr("r", 12)
             //.attr("fill", "red")
-            .attr("opacity", ".8")
+            .attr("opacity", .8)
             .classed("stateCircle", true);
             // .transition()
             // .duration(1500)

@@ -51,11 +51,7 @@ function makeResponsive() {
     // ===================================
     Data.forEach(function(d) {
       d.poverty = +d.poverty
-      d.healthcare  = +d.healthcare
-      d.age = +d.age
-      d.smokes = +d.smokes
-      d.income = +d.income
-      d.obesity = +d.obesity;
+      d.healthcare  = +d.healthcare;
     });
 
     
@@ -148,7 +144,9 @@ function makeResponsive() {
       // ==============================
       circlesGroup.on("mouseover", function(data) {
         toolTip.show(data, this)
-        //.attr("mouseover", "green");
+        // .attr("mouseover", true)
+        // .style("fill", "green");
+        // console.log(this, "mouseover")
       })
       
         //==============?????????????????======
@@ -156,8 +154,8 @@ function makeResponsive() {
         .on("mouseout", function(data, index) {
           toolTip.hide(data)
               d3.select(data, this)
-                .attr("pointer-events", true) 
-                .att("fill", "green");
+                // .attr("pointer-events", true) 
+                // .attr("fill", "green");
         });
 
         
