@@ -144,18 +144,14 @@ function makeResponsive() {
       // ==============================
       circlesGroup.on("mouseover", function(data) {
         toolTip.show(data, this)
-        // .attr("mouseover", true)
-        // .style("fill", "green");
-        // console.log(this, "mouseover")
+        d3.select(this).style("fill", "blue").transition().duration(100);
+
       })
       
-        //==============?????????????????======
         // Event Listener for on-mouseout event
         .on("mouseout", function(data, index) {
           toolTip.hide(data)
-              d3.select(data, this)
-                // .attr("pointer-events", true) 
-                // .attr("fill", "green");
+              d3.select(this).style("fill", "green").transition().duration(0);
         });
 
         
