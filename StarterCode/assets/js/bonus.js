@@ -115,19 +115,21 @@ function renderYAxes(newYScale,yAxis){
 // Updating and Transition to New Circles, Adjusting xScale & xAxil depending on data
 function renderCircles(circlesGroup, newXScale, newYScale, chosenXAxis, chosenYAxis){
     
-    var circlesGroup = chartGroup.append('g').selectAll("circle")
-            .data(Data)
-            .enter()
-            .append("circle")
-            .attr("cx", d => newXScale(d[chosenXAxis]))
-            .attr("cy", d => newYScale(d[chosenYAxis]))
-            .attr("r", 12)
-            .attr("opacity", .8)
-            .classed("stateCircle", true)
+    // var circlesGroup = chartGroup.append('g').selectAll("circle")
+    //         .data(Data)
+    //         .enter()
+    //         .append("circle")
+    //         .attr("cx", d => newXScale(d[chosenXAxis]))
+    //         .attr("cy", d => newYScale(d[chosenYAxis]))
+    //         .attr("r", 12)
+    //         .attr("opacity", .8)
+    //         .classed("stateCircle", true)
 
         circlesGroup
             .transition()
-            .duration(1000);
+            .duration(1000)
+            .attr("cx", d => newXScale(d[chosenXAxis]))
+            .attr("cy", d => newYScale(d[chosenYAxis]));
 
     return circlesGroup;
       }
@@ -137,16 +139,22 @@ function renderCircles(circlesGroup, newXScale, newYScale, chosenXAxis, chosenYA
 // Step 5: <<<Function>>> to Add/Update State Abbreviations Text to Circles
 // =========================================================================
 function renderText(textGroup, newXScale, newYScale, chosenXAxis, chosenYAxis){
-    var textGroup = chartGroup.append("g").selectAll("text")
-        .data(Data)
-        .enter()
-        .append("text")
-        .attr("x", d => newXScale(d[chosenXAxis]))
-        .attr("y", d => newYScale(d[chosenYAxis]))
-        .classed("stateText", true)
-        .text(d => d.abbr)
-        .attr("font-size", 11)
-        .style("font-weight", "bold");
+    // var textGroup = chartGroup.append("g").selectAll("text")
+    //     .data(Data)
+    //     .enter()
+    //     .append("text")
+    //     .attr("x", d => newXScale(d[chosenXAxis]))
+    //     .attr("y", d => newYScale(d[chosenYAxis]))
+    //     .classed("stateText", true)
+    //     .text(d => d.abbr)
+    //     .attr("font-size", 11)
+    //     .style("font-weight", "bold");
+
+        textGroup
+            .transition()
+            .duration(1000)
+            .attr("x", d => newXScale(d[chosenXAxis]))
+            .attr("y", d => newYScale(d[chosenYAxis]));
 
     return textGroup;
       }
@@ -216,7 +224,9 @@ function updateToolTip(){
 // Step 8: Retrieve Data from CSV File and Execute Everything Below
 // ******************************************************************     
 // ==================================================================  
-d3.csv("assets/data/data.csv").then(function(Data) {
+
+    // Import Data
+    d3.csv("assets/data/data.csv").then(function(Data) {
 
         // Parse Data/Cast as numbers
         Data.forEach(function(d) {
@@ -228,7 +238,55 @@ d3.csv("assets/data/data.csv").then(function(Data) {
           d.obesity = +d.obesity;
         });
 
-        
+    // Calling the xScale we created
+    var xLinearScale = xScale(Data, chosenXAxis);  
+    
+    // Create y scale function
+    var yLinearScale = yScale(Data, chosenYAxis);
+
+    // Create initial axis functions
+    var bottomAxis = d3.axisBottom(xLinearScale);
+    var leftAxis = d3.axisLeft(yLinearScale);
+
+    // Append XAxis to the chart
+    var xAxis = chartGroup.append("g")
+        .attr("transform", `translate(0, ${chartHeight})`) //pushing axis down
+        //.classed("active", true)
+        .call(bottomAxis);
+  
+    // Append YAxis to the chart
+    var yAxis = chartGroup.append("g")
+        .call(leftAxis);
+    
+    // Append initial circles
+    var circlesGroup =chartGroup.append("g").selectAll("circle")
+        .data(Data)
+        .enter()
+        .append("circle")
+        .attr("cx", d => xLinearScale(d[chosenXAxis]))
+        .attr("cy", d => yLinearScale(d[chosenYAxis]))
+        .classed("stateCircle", true)
+        .attr("r", 12)
+        .attr("opacity", ".5");
+
+    // Append Text to Cirle
+    var textGroup = chartGroup.append("g").selectAll("text")
+        .data(Data)
+        .enter()
+        .append("text")
+        .attr("x", d => xLinearScale(d[chosenXAxis]))
+        .attr("y", d => xLinearScale(d[chosenYAxis]))
+        .classed("stateText", true)
+        .text(d => d.abbr)
+        .attr("font-size", 11)
+        .style("font-weight", "bold");
+
+    // Create group for two x-axis labels
+    var labelsGroup = chartGroup.append("g")
+    .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`);
+
+
+
   
         // Create Y-axes labels
         chartGroup
@@ -250,19 +308,6 @@ d3.csv("assets/data/data.csv").then(function(Data) {
           .attr("dy", "1em")
           .text("In Poverty (%)");
 
-    // ======================================
-     // Import & Load data from data.csv File
-    // =======================================
-    
-  //Append Axes (X & Y) to the chart
-  chartGroup
-  .append("g")
-  .call(leftAxis);
-
-chartGroup
-  .append("g")
-  .attr("transform", `translate(0, ${chartHeight})`)
-  .call(bottomAxis);
 
   
         // Catching erros in console without having to catch at every line
