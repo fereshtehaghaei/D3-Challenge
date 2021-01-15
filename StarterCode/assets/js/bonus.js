@@ -197,19 +197,17 @@ function updateToolTip(){
     chartGroup.call(toolTip);
 
     // Create Event Listeners to display and hide the ToolTip
-        // ==============================
-        circlesGroup.on("mouseover", function(data) {
+    circlesGroup.on("mouseover", function(data) {
             toolTip.show(data, this)
-         })
+    })
 
-            // Event Listener for on-mouseout event
-            .on("mouseout", function(data, index) {
-              toolTip.hide(data, this)
-            });
+        // Event Listener for on-mouseout event
+        .on("mouseout", function(data, index) {
+            toolTip.hide(data)
+        });
 
-    return toolTip;       
-
-        }
+    return circlesGroup;     
+      }
 
 
         
