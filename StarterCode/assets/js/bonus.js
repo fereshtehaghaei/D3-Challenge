@@ -105,12 +105,12 @@ function renderYAxes(newYScale,yAxis){
          .duration(1000)
          .call(leftAxis);
 
-    return leftAxis;  
+    return yAxis;  
       }
 
-// ===============================================
-// Step 4: <<<Function>>> to Create/Update Circle Group
-// ===============================================
+// =====================================================================================
+// Step 4: <<<Function>>> Create/Update Circle Group with a transition to new circles
+// =====================================================================================
 function makeCircles(){
     //Append Axes (X & Y) to the chart
         chartGroup
