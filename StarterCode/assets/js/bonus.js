@@ -198,17 +198,35 @@ function updateToolTip(){
 
     // Create Event Listeners to display and hide the ToolTip
     circlesGroup.on("mouseover", function(data) {
-            toolTip.show(data, this)
+        toolTip.show(data, this)
+        d3.select(this).style("fill", "blue").transition().duration(100);
     })
 
         // Event Listener for on-mouseout event
         .on("mouseout", function(data, index) {
             toolTip.hide(data)
+            d3.select(this).style("fill", "green").transition().duration(0);
         });
 
     return circlesGroup;     
       }
 
+// ==================================================================  
+// ******************************************************************
+// Step 8: Retrieve Data from CSV File and Execute Everything Below
+// ******************************************************************     
+// ==================================================================  
+d3.csv("assets/data/data.csv").then(function(Data) {
+
+        // Parse Data/Cast as numbers
+        Data.forEach(function(d) {
+          d.poverty = +d.poverty
+          d.healthcare  = +d.healthcare
+          d.age = +d.age
+          d.smokes = +d.smokes
+          d.income = +d.income
+          d.obesity = +d.obesity;
+        });
 
         
   
@@ -235,18 +253,7 @@ function updateToolTip(){
     // ======================================
      // Import & Load data from data.csv File
     // =======================================
-    d3.csv("assets/data/data.csv").then(function(Data) {
-
-        // Parse Data/Cast as numbers
-        Data.forEach(function(d) {
-          d.poverty = +d.poverty
-          d.healthcare  = +d.healthcare
-          d.age = +d.age
-          d.smokes = +d.smokes
-          d.income = +d.income
-          d.obesity = +d.obesity;
-        });
-
+    
   //Append Axes (X & Y) to the chart
   chartGroup
   .append("g")

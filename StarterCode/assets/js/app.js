@@ -151,7 +151,7 @@ function makeResponsive() {
         // Event Listener for on-mouseout event
         .on("mouseout", function(data, index) {
           toolTip.hide(data)
-              d3.select(this).style("fill", "green").transition().duration(0);
+          d3.select(this).style("fill", "green").transition().duration(0);
         });
 
         
