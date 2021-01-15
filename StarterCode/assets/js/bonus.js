@@ -1,6 +1,6 @@
-//========================
-//Browser Resize function 
-//========================
+//==============================================================
+// <<<Function>>> Resizing Browser (Creating a Responsive page)
+//==============================================================
 function makeResponsive() {
 
     // If the SVG area isn't empty when the browser loads, remove & replace it with a resized version of the chart
@@ -38,94 +38,78 @@ function makeResponsive() {
         .attr("height", svgHeight)
         .attr("width", svgWidth);
   
-    // Append Group Element & Set Margins - Shift (Translate) by Left and Top Margins Using Transform
+    // Append SVG Group Element & Set Margins - Shift (Translate) by Left and Top Margins Using Transform
     var chartGroup = svg
         .append("g")
         .attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
 
-    
-     // ======================================
-     // Import & Load data from data.csv File
-    // =======================================
-    d3.csv("assets/data/data.csv").then(function(Data) {
 
-        // Parse Data/Cast as numbers
-        Data.forEach(function(d) {
-          d.poverty = +d.poverty
-          d.healthcare  = +d.healthcare
-          d.age = +d.age
-          d.smokes = +d.smokes
-          d.income = +d.income
-          d.obesity = +d.obesity;
-        });
-
-      //==================================================================
-      // Starting Bonus Section, setting up variables & Creating Functions
-     //==================================================================
-      
 // ============================== 
 // Step 1: Initial X & Y Axis
 // ============================== 
-var selectedXAxis = "poverty";
-var selectedYAxis = "healthcare";
+var chosenXAxis = "poverty";
+var chosenYAxis = "healthcare";
 
 
-// ============================== 
-// Step 2: Create Scale functions
-//===============================
+// ============================================= 
+// Step 2: <<<Function>>> Create Scale functions
+//==============================================
 
 // Function To UPDATE the Xscale
-function updateXScale(Data, selectedXAxis){
+function xScale(Data, chosenXAxis){
     // Creating Scale Function for Chart's selectedXAxis
     var xLinearScale = d3.scaleLinear()
         .domain([
-                    d3.min(Data, d => d[selectedXAxis])*.9,
-                    d3.max(Data, d => d[selectedXAxis])*1.1
+                    d3.min(Data, d => d[chosenXAxis])*.9,
+                    d3.max(Data, d => d[chosenXAxis])*1.1
                 ])
         .range([0, chartWidth]);
 
     return xLinearScale;
-        
      }
 
 // Function To UPDATE the Yscale
-function updateYScale(Data, selectedYAxis){
+function yScale(Data, chosenYAxis){
     // Creating Scale Function for Chart's selectedYAxis
     var yLinearScale = d3.scaleLinear()
             .domain([
-                    d3.min(Data, d => d[selectedYAxis])*.9,
-                    d3.max(Data, d => d[selectedYAxis])*1.1
+                    d3.min(Data, d => d[chosenYAxis])*.9,
+                    d3.max(Data, d => d[chosenYAxis])*1.1
                     ])
             .range([chartHeight, 0]);
 
     return yLinearScale;
      }
      
-//=============================================
-// Step 3: Create X & Y Axis updating function
-// ============================================
+//================================================================================
+// Step 3: <<<Function>>> Create X & Y Axis updating xAxis & yAxis var upon click
+// ===============================================================================
 
-// ???
 // Updating xAxis Upon Click on Axis Label
-function makeXaxis(newXScale,xAxis){
+function renderXAxes(newXScale,xAxis){
     var bottomAxis = d3.axisBottom(newXScale);
-        //.call(bottomAxis);
+        
+    xAxis.transition()
+         .duration(1000)
+         .call(bottomAxis);
 
-    return bottomAxis;  
+    return xAxis; 
       }
-
       
-// ???
+
 // Updating yAxis Upon Click on Axis Label
-function makeYaxis(newYScale,yAxis){
+function renderYAxes(newYScale,yAxis){
     var leftAxis = d3.axisLeft(newYScale); 
-        //.call(leftAxis);
+    
+    xAxis.transition()
+         .duration(1000)
+         .call(leftAxis);
 
     return leftAxis;  
       }
 
 // ===============================================
-// Step 4: Function to Create/Update Circle Group
+// Step 4: <<<Function>>> to Create/Update Circle Group
 // ===============================================
 function makeCircles(){
     //Append Axes (X & Y) to the chart
@@ -257,12 +241,30 @@ function updateToolTip(){
           .attr("class", "axisText")
           .attr("dy", "1em")
           .text("In Poverty (%)");
+
+    // ======================================
+     // Import & Load data from data.csv File
+    // =======================================
+    d3.csv("assets/data/data.csv").then(function(Data) {
+
+        // Parse Data/Cast as numbers
+        Data.forEach(function(d) {
+          d.poverty = +d.poverty
+          d.healthcare  = +d.healthcare
+          d.age = +d.age
+          d.smokes = +d.smokes
+          d.income = +d.income
+          d.obesity = +d.obesity;
+        });
+
   
   
         // Catching erros in console without having to catch at every line
         }).catch(function(error) {
         console.log(error);
         });
+
+        
   
       }
   
