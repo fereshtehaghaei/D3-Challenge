@@ -101,17 +101,19 @@ function renderXAxes(newXScale,xAxis){
 function renderYAxes(newYScale,yAxis){
     var leftAxis = d3.axisLeft(newYScale); 
     
-    xAxis.transition()
+    yAxis.transition()
          .duration(1000)
          .call(leftAxis);
 
     return yAxis;  
       }
 
-// =====================================================================================
-// Step 4: <<<Function>>> Create/Update Circle Group with a transition to new circles
-// =====================================================================================
-function makeCircles(){
+// ==================================================
+// Step 4: <<<Function>>> Create/Update Circle Group
+// ==================================================
+
+// Updating and Transition to New Circles, Adjusting xScale & xAxil depending on data
+function renderCircles(circlesGroup, newXScale, chosenXAxis){
     //Append Axes (X & Y) to the chart
         chartGroup
             .append("g")
