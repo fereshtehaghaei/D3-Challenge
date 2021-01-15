@@ -21,10 +21,10 @@ function makeResponsive() {
   
     // Define the chart's margins as an object
     var chartMargin = {
-        top: 50,
-        right: 50,
-        bottom: 50,
-        left: 50
+        top: 40,
+        right: 40,
+        bottom: 120,
+        left: 100
       };
   
       // Define dimensions of the chart area
@@ -281,32 +281,76 @@ function updateToolTip(){
         .attr("font-size", 11)
         .style("font-weight", "bold");
 
-    // Create group for two x-axis labels
+    // Create Lable Group for x-axis labels
     var labelsGroup = chartGroup.append("g")
-    .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`);
+        .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`);
+    
+    var povertyLabel = labelsGroup.append("text") 
+        .attr("x", 0)
+        .attr("y", 20)
+        .attr("value", "poverty")
+        .attr("dy", "1em")
+        .classed("axisText", true)
+        .classed("active", true)
+        .text("In Poverty (%)");
+    
+   
+    var ageLabel = labelsGroup.append("text") 
+        .attr("x", 0)
+        .attr("y", 40)
+        .attr("value", "age")
+        .attr("dy", "1em")
+        .classed("axisText", true)
+        .classed("active", true)
+        .text("Age (Median)");
+    
+    
+    var incomeLabel = labelsGroup.append("text") 
+        .attr("x", 0)
+        .attr("y", 60)
+        .attr("value", "income")
+        .attr("dy", "1em")
+        .classed("axisText", true)
+        .classed("active", true)
+        .text("Household Income (Median)");
 
+
+    // Create Lable Group for y-axis labels
+    var labelsGroup = chartGroup.append("g")
+        .attr("transform", "rotate(-90)")
+
+    
+    var healthcareLabel = labelsGroup.append("text")
+    .attr("y", -50)
+    .attr("x", 0 - (chartHeight / 2))
+    .attr("value", "healthcare")
+    .attr("dy", "1em")
+    .attr("class", "axisText")
+    .text("Lacks Healthcare (%)");
+
+
+    var smokesLabel = labelsGroup.append("text")
+    .attr("y", -70)
+    .attr("x", 0 - (chartHeight / 2))
+    .attr("value", "smokes")
+    .attr("dy", "1em")
+    .attr("class", "axisText")
+    .text("Smokes (%)");
+
+
+    var obesseLabel = labelsGroup.append("text")
+    .attr("y", -90)
+    .attr("x", 0 - (chartHeight / 2))
+    .attr("value", "obesity")
+    .attr("dy", "1em")
+    .attr("class", "axisText")
+    .text("Obesse (%)");
+
+    // I AM HERE RIGHT NOW
 
 
   
-        // Create Y-axes labels
-        chartGroup
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", -50)
-            .attr("x", 0 - (chartHeight / 2))
-            .attr("dy", "1em")
-            //.attr("dx", "-13em")
-            .attr("class", "axisText")
-            .text("Lacks Healthcare (%)");
-  
-        chartGroup
-          .append("text")
-          .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`)
-          // .attr('x', chartWidth /2)
-          // .attr('y', chartHeight +20)
-          .attr("class", "axisText")
-          .attr("dy", "1em")
-          .text("In Poverty (%)");
+
 
 
   
