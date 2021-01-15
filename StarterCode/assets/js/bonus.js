@@ -301,7 +301,7 @@ function updateToolTip(){
         .attr("value", "age")
         .attr("dy", "1em")
         .classed("axisText", true)
-        .classed("active", true)
+        .classed("inactive", true)
         .text("Age (Median)");
     
     
@@ -311,7 +311,7 @@ function updateToolTip(){
         .attr("value", "income")
         .attr("dy", "1em")
         .classed("axisText", true)
-        .classed("active", true)
+        .classed("inactive", true)
         .text("Household Income (Median)");
 
 
@@ -321,30 +321,33 @@ function updateToolTip(){
 
     
     var healthcareLabel = labelsGroup.append("text")
-    .attr("y", -50)
-    .attr("x", 0 - (chartHeight / 2))
-    .attr("value", "healthcare")
-    .attr("dy", "1em")
-    .attr("class", "axisText")
-    .text("Lacks Healthcare (%)");
+        .attr("y", -50)
+        .attr("x", 0 - (chartHeight / 2))
+        .attr("value", "healthcare")
+        .attr("dy", "1em")
+        .attr("class", "axisText")
+        .classed("active", true)
+        .text("Lacks Healthcare (%)");
 
 
     var smokesLabel = labelsGroup.append("text")
-    .attr("y", -70)
-    .attr("x", 0 - (chartHeight / 2))
-    .attr("value", "smokes")
-    .attr("dy", "1em")
-    .attr("class", "axisText")
-    .text("Smokes (%)");
+        .attr("y", -70)
+        .attr("x", 0 - (chartHeight / 2))
+        .attr("value", "smokes")
+        .attr("dy", "1em")
+        .attr("class", "axisText")
+        .classed("inactive", true)
+        .text("Smokes (%)");
 
 
     var obesseLabel = labelsGroup.append("text")
-    .attr("y", -90)
-    .attr("x", 0 - (chartHeight / 2))
-    .attr("value", "obesity")
-    .attr("dy", "1em")
-    .attr("class", "axisText")
-    .text("Obesse (%)");
+        .attr("y", -90)
+        .attr("x", 0 - (chartHeight / 2))
+        .attr("value", "obesity")
+        .attr("dy", "1em")
+        .attr("class", "axisText")
+        .classed("inactive", true)
+        .text("Obesse (%)");
 
     // updateToolTip function above csv import
     var circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
@@ -378,46 +381,45 @@ function updateToolTip(){
 
       // changes classes to change bold text
       if (chosenXAxis === "poverty") {
-        albumsLabel
-          .classed("active", true) // adding active class
+
+        povertyLabel
+          .classed("active", true)      // adding active class
           .classed("inactive", false); // removing inactive class
-        hairLengthLabel
+        ageLabel
+          .classed("active", false)
+          .classed("inactive", true);
+        incomeLabel
           .classed("active", false)
           .classed("inactive", true);
       }
+
       else {
-        albumsLabel
+        povertyLabel
           .classed("active", false)
           .classed("inactive", true);
-        hairLengthLabel
+        ageLabel
           .classed("active", true)
           .classed("inactive", false);
+        incomeLabel
+          .classed("active", true)
+          .classed("inactive", false);
+        
       }
     }
   });
-    // I AM HERE RIGHT NOW
-
-
   
-
-
-
+// Catching erros in console without having to catch at every line
+}).catch(function(error) {
+    console.log(error);
+});
   
-        // Catching erros in console without having to catch at every line
-        }).catch(function(error) {
-        console.log(error);
-        });
-
-        
+}
   
-      }
-  
-      makeResponsive();
+makeResponsive();
       
-      // Event listener for window resize.
-      // When the browser window is resized, makeResponsive() is called
-  
-      d3.select(window).on("resize", makeResponsive);
+// Event listener for window resize.
+// When the browser window is resized, makeResponsive() is called
+d3.select(window).on("resize", makeResponsive);
   
   
   
