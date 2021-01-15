@@ -113,86 +113,76 @@ function renderYAxes(newYScale,yAxis){
 // ==================================================
 
 // Updating and Transition to New Circles, Adjusting xScale & xAxil depending on data
-function renderCircles(circlesGroup, newXScale, chosenXAxis){
-    //Append Axes (X & Y) to the chart
-        chartGroup
-            .append("g")
-            .call(leftAxis);
-
-        chartGroup
-            .append("g")
-            .attr("transform", `translate(0, ${chartHeight})`)
-            .call(bottomAxis);
-
+function renderCircles(circlesGroup, newXScale, newYScale, chosenXAxis, chosenYAxis){
+    
     var circlesGroup = chartGroup.append('g').selectAll("circle")
             .data(Data)
             .enter()
             .append("circle")
-            .attr("cx", d => newXScale(d[selectedXAxis]))
-            .attr("cy", d => newYScale(d[selectedYAxis]))
+            .attr("cx", d => newXScale(d[chosenXAxis]))
+            .attr("cy", d => newYScale(d[chosenYAxis]))
             .attr("r", 12)
-            //.attr("fill", "red")
             .attr("opacity", .8)
-            .classed("stateCircle", true);
-            // .transition()
-            // .duration(1500)
-            // //.delay(1000)
-            // .attr("r", 14);
+            .classed("stateCircle", true)
+
+        circlesGroup
+            .transition()
+            .duration(1000);
 
     return circlesGroup;
-       }
+      }
      
 
-// ==================================================================
-// Step 5: Function to Add/Update State Abbreviations Text to Circles
-// ==================================================================
-function makeText(){
+// =========================================================================
+// Step 5: <<<Function>>> to Add/Update State Abbreviations Text to Circles
+// =========================================================================
+function renderText(textGroup, newXScale, newYScale, chosenXAxis, chosenYAxis){
     var textGroup = chartGroup.append("g").selectAll("text")
         .data(Data)
         .enter()
         .append("text")
-        .attr("x", d => newXScale(d[selectedXAxis]))
-        .attr("y", d => newYScale(d[selectedYAxis]))
+        .attr("x", d => newXScale(d[chosenXAxis]))
+        .attr("y", d => newYScale(d[chosenYAxis]))
         .classed("stateText", true)
         .text(d => d.abbr)
         .attr("font-size", 11)
         .style("font-weight", "bold");
-        // .transition()
-        // .duration(1500)
-        // //.delay(1000)
-        // .attr("font-size", 12);
 
     return textGroup;
-        }
+      }
 
-// ========================================
-// Step 7: Function for updating tool-tip
-// ========================================
+// ================================================================
+// Step 7: <<<Function>>> Updating Circles Group with New Tool-Tip
+// ================================================================
 function updateToolTip(){  
+
+    var xLable;
+    var yLable;
+
     // xLable Options
-    if(selectedXAxis == "poverty") {
-        var xLable = "Poverty (%)"
+    if (chosenXAxis === "poverty") {
+        xLable = "Poverty (%)"
     }
 
-    else if (selectedXAxis == "age"){
-        var xLable = "Age (Median)"
+    else if (chosenXAxis === "age"){
+            xLable = "Age (Median)"
     }
 
-    else if (selectedXAxis == "income"){
-        var xLable = "Household Income (Median)"
+    else if (schosenXAxis === "income"){
+            xLable = "Household Income (Median)"
     }
 
     // yLable Options
-    if(selectedXAxis == "healthcare") {
-        var yLable = "Lacks Healthcare (%)"
+    if (chosenYAxis === "healthcare") {
+        yLable = "Lacks Healthcare (%)"
     }
 
-    else if (selectedXAxis == "smokes"){
-        var yLable = "Smokes (%)"
+    else if (chosenYAxis === "smokes"){
+             yLable = "Smokes (%)"
     }
 
-    else if (selectedXAxis == "obesity"){
-        var yLable = "Obese (%)"
+    else if (chosenYAxis === "obesity"){
+            yLable = "Obese (%)"
     }
 
     // Initialize ToolTip
@@ -200,7 +190,7 @@ function updateToolTip(){
             .attr("class", "d3-tip")
             .offset([90, -40])
             .html(function(d) {
-              return (`<strong>${d.state}</strong>${d[selectedXAxis]}<br>${d[selectedYAxis]}`);
+              return (`<strong>${d.state}</strong>${d[chosenXAxis]}<br>${d[chosenYAxis]}`);
             });
         
     // Create tooltip in the chart
@@ -259,7 +249,16 @@ function updateToolTip(){
           d.obesity = +d.obesity;
         });
 
-  
+  //Append Axes (X & Y) to the chart
+  chartGroup
+  .append("g")
+  .call(leftAxis);
+
+chartGroup
+  .append("g")
+  .attr("transform", `translate(0, ${chartHeight})`)
+  .call(bottomAxis);
+
   
         // Catching erros in console without having to catch at every line
         }).catch(function(error) {
