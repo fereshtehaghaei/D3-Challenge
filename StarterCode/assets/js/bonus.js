@@ -154,7 +154,7 @@ function renderText(textGroup, newXScale, newYScale, chosenXAxis, chosenYAxis){
             .duration(1000)
             .attr("x", d => newXScale(d[chosenXAxis]))
             .attr("y", d => newYScale(d[chosenYAxis]))
-            .classed(".aText", true);
+            .attr("stateText", true);
 
     return textGroup;
       }
@@ -198,9 +198,9 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
     // Initialize ===ToolTip===
     var toolTip = d3.tip()
             .attr("class", "d3-tip")
-            .offset([90, -40])
+            .offset([90, -80])
             .html(function(d) {
-                return (`${d.state} <br> ${xLable} ${d[chosenXAxis]} <br> ${yLable} ${d[chosenYAxis]}`);
+                return (`<strong>${d.state}</strong> <br> ${xLable} ${d[chosenXAxis]} <br> ${yLable} ${d[chosenYAxis]}`);
             });
         
         // Create CRICLES Tooltip in the chart
@@ -214,11 +214,11 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
 
             // Event Listener for on-mouseout event
             .on("mouseout", function(data, index) {
-                toolTip.hide(data)
+                toolTip.hide(data,this)
                 d3.select(this).style("fill", "green").transition().duration(0);
             });
 
-
+            
         // Create TEXT Tooltip in the chart for (inside Circles)
         textGroup.call(toolTip);
 
