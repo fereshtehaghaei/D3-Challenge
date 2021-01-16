@@ -7,8 +7,8 @@ function makeResponsive() {
     var svgArea = d3.select("body").select("svg");
   
     // Setup Chart Params
-    var width = parseInt(d3.select("#scatter").style("width"))
-    var height = (width - width /4)
+    var width = parseInt(d3.select("#scatter").style("width"));
+    var height = (width - width /4);
   
       // Clear SVG if Not Empty
       if (!svgArea.empty()) {
@@ -39,8 +39,7 @@ function makeResponsive() {
         .attr("width", svgWidth);
   
     // Append SVG Group Element & Set Margins - Shift (Translate) by Left and Top Margins Using Transform
-    var chartGroup = svg
-        .append("g")
+    var chartGroup = svg.append("g")
         .attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
 
 
@@ -56,12 +55,12 @@ var chosenYAxis = "healthcare";
 //==============================================
 
 // Function To UPDATE the Xscale
-function xScale(Data, chosenXAxis){
+function xScale(Data, chosenXAxis) {
     // Creating Scale Function for Chart's selectedXAxis
     var xLinearScale = d3.scaleLinear()
         .domain([
                     d3.min(Data, d => d[chosenXAxis])*.9,
-                    d3.max(Data, d => d[chosenXAxis])*1.1
+                    d3.max(Data, d => d[chosenXAxis])*1.2
                 ])
         .range([0, chartWidth]);
 
@@ -74,7 +73,7 @@ function yScale(Data, chosenYAxis){
     var yLinearScale = d3.scaleLinear()
             .domain([
                     d3.min(Data, d => d[chosenYAxis])*.9,
-                    d3.max(Data, d => d[chosenYAxis])*1.1
+                    d3.max(Data, d => d[chosenYAxis])*1.2
                     ])
             .range([chartHeight, 0]);
 
@@ -86,7 +85,7 @@ function yScale(Data, chosenYAxis){
 // ===============================================================================
 
 // Updating xAxis Upon Click on Axis Label
-function renderXAxes(newXScale,xAxis){
+function renderXAxes(newXScale, xAxis){
     var bottomAxis = d3.axisBottom(newXScale);
         
     xAxis.transition()
@@ -98,7 +97,7 @@ function renderXAxes(newXScale,xAxis){
       
 
 // Updating yAxis Upon Click on Axis Label
-function renderYAxes(newYScale,yAxis){
+function renderYAxes(newYScale, yAxis){
     var leftAxis = d3.axisLeft(newYScale); 
     
     yAxis.transition()
@@ -154,7 +153,8 @@ function renderText(textGroup, newXScale, newYScale, chosenXAxis, chosenYAxis){
             .transition()
             .duration(1000)
             .attr("x", d => newXScale(d[chosenXAxis]))
-            .attr("y", d => newYScale(d[chosenYAxis]));
+            .attr("y", d => newYScale(d[chosenYAxis]))
+            .classed("stateText", true);
 
     return textGroup;
       }
@@ -162,7 +162,7 @@ function renderText(textGroup, newXScale, newYScale, chosenXAxis, chosenYAxis){
 // ================================================================
 // Step 7: <<<Function>>> Updating Circles Group with New Tool-Tip
 // ================================================================
-function updateToolTip(chosenXAxis, circlesGroup, textGroup){  
+function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){  
 
     var xLable;
     var yLable;
@@ -192,32 +192,46 @@ function updateToolTip(chosenXAxis, circlesGroup, textGroup){
     else if (chosenYAxis === "obesity"){
             yLable = "Obese (%)"
     }
-
-    // Initialize ToolTip
+ 
+    // Initialize ===ToolTip===
     var toolTip = d3.tip()
             .attr("class", "d3-tip")
             .offset([90, -40])
             .html(function(d) {
-              return (`<strong>${d.state}</strong>${d[chosenXAxis]}<br>${d[chosenYAxis]}`);
+                return (`${d.state} <br> ${xLable} ${d[chosenXAxis]} <br> ${yLable} ${d[chosenYAxis]}`);
             });
         
-    // Create tooltip in the chart
-    chartGroup.call(toolTip);
+        // Create CRICLES Tooltip in the chart
+        circlesGroup.call(toolTip);
 
-    // Create Event Listeners to display and hide the ToolTip
-    circlesGroup.on("mouseover", function(data) {
-        toolTip.show(data, this)
-        d3.select(this).style("fill", "blue").transition().duration(100);
-    })
+        // Create Event Listeners to display and hide the ToolTip
+        circlesGroup.on("mouseover", function(data) {
+            toolTip.show(data, this);
+            //d3.select(this).style("fill", "blue").transition().duration(100);
+        })
 
-        // Event Listener for on-mouseout event
-        .on("mouseout", function(data, index) {
-            toolTip.hide(data)
-            d3.select(this).style("fill", "green").transition().duration(0);
-        });
+            // Event Listener for on-mouseout event
+            .on("mouseout", function(data, index) {
+                toolTip.hide(data);
+                //d3.select(this).style("fill", "green").transition().duration(0);
+            });
 
-    return circlesGroup;     
-      }
+
+        // Create TEXT Tooltip in the chart for (inside Circles)
+        textGroup.call(toolTip);
+
+        // Create Event Listeners to display and hide the ToolTip
+        textGroup.on("mouseover", function(data) {
+            toolTip.show(data, this);
+        })
+            // Event Listener for on-mouseout event
+            .on("mouseout", function(data, index) {
+                toolTip.hide(data);
+            });
+
+    return circlesGroup;
+
+}
 
 // ==================================================================  
 // ******************************************************************
@@ -275,7 +289,7 @@ function updateToolTip(chosenXAxis, circlesGroup, textGroup){
         .enter()
         .append("text")
         .attr("x", d => xLinearScale(d[chosenXAxis]))
-        .attr("y", d => xLinearScale(d[chosenYAxis]))
+        .attr("y", d => yLinearScale(d[chosenYAxis]))
         .classed("stateText", true)
         .text(d => d.abbr)
         .attr("font-size", 11)
@@ -381,7 +395,7 @@ function updateToolTip(chosenXAxis, circlesGroup, textGroup){
             circlesGroup = renderCircles(circlesGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
 
             // updates circles with new x values
-            textGroup = renderCircles(textGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
+            textGroup = renderText(textGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
 
             // updates tooltips with new info
             circlesGroup = updateToolTip(circlesGroup, chosenXAxis, chosenYAxis);
@@ -452,10 +466,10 @@ function updateToolTip(chosenXAxis, circlesGroup, textGroup){
             circlesGroup = renderCircles(circlesGroup,  xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
 
             // updates circles with new y values
-            textGroup = renderCircles(textGroup,  xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
+            textGroup = renderText(textGroup,  xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
 
             // updates tooltips with new Y value
-            circlesGroup = updateToolTip(circlesGroup, textGroup, chosenYAxis, chosenXAxis);
+            circlesGroup = updateToolTip(circlesGroup, textGroup, chosenYAxis, chosenXAxis, xLinearScale, ylinearScale);
 
         // changes classes to change bold text
         if (chosenYAxis === "healthcare") {
@@ -506,8 +520,7 @@ function updateToolTip(chosenXAxis, circlesGroup, textGroup){
   
 makeResponsive();
       
-// Event listener for window resize.
-// When the browser window is resized, makeResponsive() is called
+// Event listener to resizeing the chart when window is resized
 d3.select(window).on("resize", makeResponsive);
   
   
