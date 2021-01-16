@@ -398,7 +398,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
             textGroup = renderText(textGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
 
             // updates tooltips with new info
-            circlesGroup = updateToolTip(circlesGroup, textGroup,chosenXAxis, chosenYAxis);
+            circlesGroup = updateToolTip(circlesGroup, textGroup, chosenXAxis, chosenYAxis);
 
         // changes classes to change bold text
         if (chosenXAxis === "poverty") {
@@ -469,7 +469,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
             textGroup = renderText(textGroup,  xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
 
             // updates tooltips with new Y value
-            circlesGroup = updateToolTip(circlesGroup, textGroup, chosenYAxis, chosenXAxis, xLinearScale, ylinearScale);
+            circlesGroup = updateToolTip(circlesGroup, textGroup, chosenYAxis, chosenXAxis);
 
         // changes classes to change bold text
         if (chosenYAxis === "healthcare") {
