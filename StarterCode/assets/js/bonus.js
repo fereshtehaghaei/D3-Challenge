@@ -377,7 +377,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
     .on("click", function() {
         
     var value = d3.select(this).attr("value"); // get value of selection
-
+        console.log("X AXIS HERE", value);
         if (value !== chosenXAxis) {
 
             // replaces chosenXAxis with value
@@ -398,7 +398,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
             textGroup = renderText(textGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
 
             // updates tooltips with new info
-            circlesGroup = updateToolTip(circlesGroup, textGroup, chosenXAxis, chosenYAxis);
+            circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup);
 
         // changes classes to change bold text
         if (chosenXAxis === "poverty") {
@@ -415,6 +415,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
         }
 
         else if  (chosenXAxis === "age") {
+            console.log("AGE AXIS")
             povertyLabel
                 .classed("active", false)
                 .classed("inactive", true);
@@ -469,7 +470,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
             textGroup = renderText(textGroup,  xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
 
             // updates tooltips with new Y value
-            circlesGroup = updateToolTip(circlesGroup, textGroup, chosenYAxis, chosenXAxis);
+            circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup);
 
         // changes classes to change bold text
         if (chosenYAxis === "healthcare") {
@@ -486,7 +487,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
         }
 
         else if  (chosenYAxis === "smokes") {
-            heathcareLabel
+            healthcareLabel
                 .classed("active", false)
                 .classed("inactive", true);
             smokesLabel
