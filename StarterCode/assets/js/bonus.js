@@ -154,7 +154,7 @@ function renderText(textGroup, newXScale, newYScale, chosenXAxis, chosenYAxis){
             .duration(1000)
             .attr("x", d => newXScale(d[chosenXAxis]))
             .attr("y", d => newYScale(d[chosenYAxis]))
-            .classed("stateText", true);
+            .classed(".aText", true);
 
     return textGroup;
       }
@@ -169,28 +169,30 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
 
     // xLable Options
     if (chosenXAxis === "poverty") {
-        xLable = "Poverty (%)"
+        xLable = "Poverty (%)";
     }
 
     else if (chosenXAxis === "age"){
-            xLable = "Age (Median)"
+            xLable = "Age (Median)";
     }
 
-    else if (chosenXAxis === "income"){
-            xLable = "Household Income (Median)"
+    else //if (chosenXAxis === "income")
+    {
+            xLable = "Household Income (Median)";
     }
 
     // yLable Options
     if (chosenYAxis === "healthcare") {
-        yLable = "Lacks Healthcare (%)"
+        yLable = "Lacks Healthcare (%)";
     }
 
     else if (chosenYAxis === "smokes"){
-             yLable = "Smokes (%)"
+             yLable = "Smokes (%)";
     }
 
-    else if (chosenYAxis === "obesity"){
-            yLable = "Obese (%)"
+    else //if (chosenYAxis === "obesity")
+    {
+            yLable = "Obese (%)";
     }
  
     // Initialize ===ToolTip===
@@ -206,14 +208,14 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
 
         // Create Event Listeners to display and hide the ToolTip
         circlesGroup.on("mouseover", function(data) {
-            toolTip.show(data, this);
-            //d3.select(this).style("fill", "blue").transition().duration(100);
+            toolTip.show(data, this)
+            d3.select(this).style("fill", "blue").transition().duration(0);
         })
 
             // Event Listener for on-mouseout event
             .on("mouseout", function(data, index) {
-                toolTip.hide(data);
-                //d3.select(this).style("fill", "green").transition().duration(0);
+                toolTip.hide(data)
+                d3.select(this).style("fill", "green").transition().duration(0);
             });
 
 
@@ -244,11 +246,11 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
 
         // Parse Data/Cast as numbers
         Data.forEach(function(d) {
-          d.poverty = +d.poverty
-          d.healthcare  = +d.healthcare
-          d.age = +d.age
-          d.smokes = +d.smokes
-          d.income = +d.income
+          d.poverty = +d.poverty;
+          d.healthcare  = +d.healthcare;
+          d.age = +d.age;
+          d.smokes = +d.smokes;
+          d.income = +d.income;
           d.obesity = +d.obesity;
         });
 
@@ -304,7 +306,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
         .attr("y", 20)
         .attr("value", "poverty")
         .attr("dy", "1em")
-        .classed("axisText", true)
+        //.classed("axisText", true)
         .classed("active", true)
         .text("In Poverty (%)");
     
@@ -314,7 +316,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
         .attr("y", 40)
         .attr("value", "age")
         .attr("dy", "1em")
-        .classed("axisText", true)
+        //.classed("axisText", true)
         .classed("inactive", true)
         .text("Age (Median)");
     
@@ -324,7 +326,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
         .attr("y", 60)
         .attr("value", "income")
         .attr("dy", "1em")
-        .classed("axisText", true)
+        //.classed("axisText", true)
         .classed("inactive", true)
         .text("Household Income (Median)");
 
@@ -339,7 +341,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
         .attr("x", 0 - (chartHeight / 2))
         .attr("value", "healthcare")
         .attr("dy", "1em")
-        .attr("class", "axisText")
+        //.classed("axisText", true)
         .classed("active", true)
         .text("Lacks Healthcare (%)");
 
@@ -349,7 +351,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
         .attr("x", 0 - (chartHeight / 2))
         .attr("value", "smokes")
         .attr("dy", "1em")
-        .attr("class", "axisText")
+        //.classed("axisText", true)
         .classed("inactive", true)
         .text("Smokes (%)");
 
@@ -359,15 +361,13 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
         .attr("x", 0 - (chartHeight / 2))
         .attr("value", "obesity")
         .attr("dy", "1em")
-        .attr("class", "axisText")
+        //.classed("axisText", true)
         .classed("inactive", true)
         .text("Obese (%)");
 
     // updateToolTip function above csv import
-    var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
+    var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup);
 
-    // updateToolTip function above csv import
-    var textGroup = updateToolTip(chosenXAxis, chosenYAxis, textGroup);
 
 
   // =========== X Axis ===========
@@ -391,14 +391,14 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
             // updates x axis with transition
             xAxis = renderXAxes(xLinearScale, xAxis);
 
-            // updates circles with new x values
+            // updates circles with new values
             circlesGroup = renderCircles(circlesGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
 
-            // updates circles with new x values
+            // updates text with new values
             textGroup = renderText(textGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
 
             // updates tooltips with new info
-            circlesGroup = updateToolTip(circlesGroup, chosenXAxis, chosenYAxis);
+            circlesGroup = updateToolTip(circlesGroup, textGroup,chosenXAxis, chosenYAxis);
 
         // changes classes to change bold text
         if (chosenXAxis === "poverty") {
@@ -485,7 +485,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
                 .classed("inactive", true);
         }
 
-        else if  (chosenXAxis === "age") {
+        else if  (chosenYAxis === "smokes") {
             heathcareLabel
                 .classed("active", false)
                 .classed("inactive", true);
@@ -509,10 +509,12 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
                 .classed("inactive", false);
         }
     }
+
   });
   
 // Catching erros in console without having to catch at every line
-}).catch(function(error) {
+})
+.catch(function(error) {
     console.log(error);
 });
   
