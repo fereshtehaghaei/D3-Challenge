@@ -377,7 +377,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
     .on("click", function() {
         
     var value = d3.select(this).attr("value"); // get value of selection
-        console.log("X AXIS HERE", value);
+        
         if (value !== chosenXAxis) {
 
             // replaces chosenXAxis with value
@@ -415,7 +415,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup){
         }
 
         else if  (chosenXAxis === "age") {
-            console.log("AGE AXIS")
+        
             povertyLabel
                 .classed("active", false)
                 .classed("inactive", true);
